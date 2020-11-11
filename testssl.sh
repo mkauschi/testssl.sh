@@ -3023,6 +3023,35 @@ run_cookie_flags() {     # ARG1: Path
           else
                fileout "cookie_httponly" "INFO" "$nr_secure/$nr_cookies at \"$1\" marked as HttpOnly$msg302_"
           fi
+
+          while read -r line;
+          do
+            cookie_lowercase=$(tolower "$line")
+            if [[ "$cookie_lowercase" != *" secure"* ]];
+            then
+              read -r _ cookie _ <<< "$line"
+              IFS="=" read -r cookie_name _ <<< "$cookie"
+              not_secure_cookie_names+=("$cookie_name")
+            fi
+
+            if [[ "$cookie_lowercase" != *" httponly"* ]];
+            then
+              read -r _ cookie _ <<< "$line"
+              IFS="=" read -r cookie_name _ <<< "$cookie"
+              not_httponly_cookie_names+=("$cookie_name")
+            fi
+          done < $TMPFILE
+
+          if [[ -v not_httponly_cookie_names ]]; then
+               not_httponly_cookies="$(IFS=","; printf "%s" "${not_httponly_cookie_names[*]}")"
+               fileout "cookie_not_httponly" "INFO" "The cookie(s) with name(s) '${not_httponly_cookies}' does not have the httponly flag set."
+          fi
+
+          if [[ -v not_secure_cookie_names ]]; then
+               not_secure_cookies="$(IFS=","; printf "%s" "${not_secure_cookie_names[*]}")"
+               fileout "cookie_not_secure" "INFO" "The cookie(s) with name(s) '${not_secure_cookies}' does not have the secure flag set."
+          fi
+
           outln "$msg302"
           allcookies="$(awk '/[Ss][Ee][Tt]-[Cc][Oo][Oo][Kk][Ii][Ee]:/ { print $2 }' "$TMPFILE")"
           sub_f5_bigip_check "$allcookies" "$spaces"
