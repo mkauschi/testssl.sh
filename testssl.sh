@@ -3040,6 +3040,18 @@ run_cookie_flags() {     # ARG1: Path
               IFS="=" read -r cookie_name _ <<< "$cookie"
               not_httponly_cookie_names+=("$cookie_name")
             fi
+
+            if [[ "$cookie_lowercase" == *" same-site"* && "${string#*same-site=}" == "None" ]];
+            then
+              same_site_value=${string#*same-site=}
+              same_site_cookie_names+=("$cookie_name")
+            fi
+
+            if [[ "$cookie_lowercase" != *" same-site"* ]];
+            then
+              echo $cookie_name
+              same_site_cookie_missing_names+=("$cookie_name")
+            fi
           done < $TMPFILE
 
           if [[ -v not_httponly_cookie_names ]]; then
@@ -3050,6 +3062,16 @@ run_cookie_flags() {     # ARG1: Path
           if [[ -v not_secure_cookie_names ]]; then
                not_secure_cookies="$(IFS=","; printf "%s" "${not_secure_cookie_names[*]}")"
                fileout "cookie_not_secure" "INFO" "The cookie(s) with name(s) '${not_secure_cookies}' does not have the secure flag set."
+          fi
+          if [[ -v same_site_cookie_names ]]; then
+               not_same_site_cookies="$(IFS=","; printf "%s" "${same_site_cookie_names[*]}")"
+               fileout "same_site" "INFO" "The cookie(s) with name(s) '${not_same_site_cookies}' does have the flag 'same-site=None' set."
+          fi
+
+          if [[ -v same_site_cookie_missing_names ]]; then
+               echo $same_site_cookie_names
+               not_same_site_cookies="$(IFS=","; printf "%s" "${same_site_cookie_missing_names[*]}")"
+               fileout "same_site" "INFO" "The cookie(s) with name(s) '${not_same_site_cookies}' does not have the same-site flag set."
           fi
 
           outln "$msg302"
