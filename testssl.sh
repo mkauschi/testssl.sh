@@ -3065,13 +3065,13 @@ run_cookie_flags() {     # ARG1: Path
           fi
           if [[ -v same_site_cookie_names ]]; then
                not_same_site_cookies="$(IFS=","; printf "%s" "${same_site_cookie_names[*]}")"
-               fileout "same_site_none" "INFO" "The cookie(s) with name(s) '${not_same_site_cookies}' does have the flag 'same-site=None' set."
+               fileout "cookie_same_site_none" "INFO" "The cookie(s) with name(s) '${not_same_site_cookies}' does have the flag 'same-site=None' set."
           fi
 
           if [[ -v same_site_cookie_missing_names ]]; then
                echo $same_site_cookie_names
                not_same_site_cookies="$(IFS=","; printf "%s" "${same_site_cookie_missing_names[*]}")"
-               fileout "not_same_site" "INFO" "The cookie(s) with name(s) '${not_same_site_cookies}' does not have the same-site flag set."
+               fileout "cookie_not_same_site" "INFO" "The cookie(s) with name(s) '${not_same_site_cookies}' does not have the same-site flag set."
           fi
 
           outln "$msg302"
