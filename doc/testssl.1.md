@@ -67,7 +67,7 @@ Options are either short or long options. Any long or short option requiring a v
 
 `--help` (or no arg) display command line help
 
-`-b, --banner`        displays testssl.sh banner, including license, usage conditions, version of testssl.sh, detected openssl version, its path to it, # of ciphers of openssl, its build date and the architecture
+`-b, --banner`        displays testssl.sh banner, including license, usage conditions, version of testssl.sh, detected openssl version, its path to it, # of ciphers of openssl, its build date and the architecture.
 
 `-v, --version`     same as before
 
@@ -101,7 +101,7 @@ Please note that `fname` has to be in Unix format. DOS carriage returns won't be
 `--warnings <batch|off>`.  The warnings parameter determines how testssl.sh will deal with situations where user input normally will be necessary. There are two options. `batch` doesn't wait for a confirming keypress when a client- or server-side probem is encountered. As of 3.0 it just then terminates the particular scan.  This is automatically chosen for mass testing (`--file`). `off` just skips the warning, the confirmation but continues the scan, independent whether it makes sense or not. Please note that there are conflicts where testssl.sh will still ask for confirmation which are the ones which otherwise would have a drastic impact on the results. Almost any other decision will be made in the future as a best guess by testssl.sh.
 The same can be achieved by setting the environment variable `WARNINGS`.
 
-`--connect-timeout <seconds>`  This is useful for socket TCP connections to a node. If the node does not complete a TCP handshake (e.g. because it is down or behind a firewall or there's an IDS or a tarpit) testssl.sh may ususally hang for around 2 minutes or even much more. This parameter instructs testssl.sh to wait at most `seconds` for the handshake to complete before giving up. This option only works if your OS has a timeout binary installed. CONNECT_TIMEOUT is the corresponding enviroment variable.
+`--connect-timeout <seconds>`  This is useful for socket TCP connections to a node. If the node does not complete a TCP handshake (e.g. because it is down or behind a firewall or there's an IDS or a tarpit) testssl.sh may usually hang for around 2 minutes or even much more. This parameter instructs testssl.sh to wait at most `seconds` for the handshake to complete before giving up. This option only works if your OS has a timeout binary installed. CONNECT_TIMEOUT is the corresponding environment variable.
 
 `--openssl-timeout <seconds>` This is especially useful for all connects using openssl and practically useful for mass testing. It avoids the openssl connect to hang for ~2 minutes. The expected parameter `seconds` instructs testssl.sh to wait before the openssl connect will be terminated. The option is only available if your OS has a timeout binary installed. As there are different implementations of `timeout`: It automatically calls the binary with the right parameters. OPENSSL_TIMEOUT is the equivalent environment variable.
 
@@ -134,7 +134,7 @@ The same can be achieved by setting the environment variable `WARNINGS`.
 `--assuming-http`  testssl.sh normally does upfront an application protocol detection. In cases where HTTP cannot be automatically detected you may want to use this option. It enforces testssl.sh not to skip HTTP specific tests (HTTP header) and to run a browser based client simulation. Please note that sometimes also the severity depends on the application protocol, e.g. SHA1 signed certificates, the lack of any SAN matches and some vulnerabilities will be punished harder when checking a web server as opposed to a mail server.
 
 `-n, --nodns <min|none>` tells testssl.sh which DNS lookups should be performed. `min` uses only forward DNS resolution (A and AAAA record or MX record) and skips CAA lookups and PTR records from the IP address back to a DNS name.  `none` performs no DNS lookups at all. For the latter you either have to supply the IP address as a target, to use `--ip` or have the IP address
-in `/etc/hosts`.  The use of the switch is only useful if you either can't or are not willing to perform DNS lookups. The latter can apply e.g. to some pentests. In general this option could e.g. help you to avoid timeouts by DNS lookups. `NODNS` is the enviroment variable for this.
+in `/etc/hosts`.  The use of the switch is only useful if you either can't or are not willing to perform DNS lookups. The latter can apply e.g. to some pentests. In general this option could e.g. help you to avoid timeouts by DNS lookups. `NODNS` is the environment variable for this.
 
 `--sneaky` For HTTP header checks testssl.sh uses normally the server friendly HTTP user agent `TLS tester from ${URL}`. With this option your traces are less verbose and a Firefox user agent is being used. Be aware that it doesn't hide your activities. That is just not possible (environment preset via `SNEAKY=true`).
 
@@ -162,7 +162,7 @@ Any single check switch supplied as an argument prevents testssl.sh from doing a
 * `LOW` (64 Bit + DES ciphers, without EXPORT ciphers): 'LOW:DES:RC2:RC4:!ADH:!EXP:!NULL:!eNULL'
 * `3DES + IDEA Ciphers`: '3DES:IDEA:!aNULL:!ADH'
 * `Average grade Ciphers`: 'HIGH:MEDIUM:AES:CAMELLIA:ARIA:!IDEA:!CHACHA20:!3DES:!RC2:!RC4:!AESCCM8:!AESCCM:!AESGCM:!ARIAGCM:!aNULL'
-* `Strong grade Ciphers` (AEAD): 'AESGCM:CHACHA20:AESGCM:CamelliaGCM:AESCCM8:AESCCM'
+* `Strong grade Ciphers` (AEAD): 'AESGCM:CHACHA20:CamelliaGCM:AESCCM8:AESCCM'
 
 `-f, --pfs, --fs,--nsa ` Checks robust (perfect) forward secrecy key exchange. "Robust" means that ciphers having intrinsic severe weaknesses like Null Authentication or Encryption, 3DES and RC4 won't be considered here. There shouldn't be the wrong impression that a secure key exchange has been taking place and everything is fine when in reality the encryption sucks. Also this section lists the available elliptical curves and Diffie Hellman groups, as well as FFDHE groups (TLS 1.2 and TLS 1.3).
 
@@ -211,7 +211,7 @@ Also for multiple server certificates are being checked for as well as for the c
 * Decodes BIG IP F5 non-encrypted cookies
 * Security headers (X-Frame-Options, X-XSS-Protection, Expect-CT,... , CSP headers). Nonsense is not yet detected here.
 
-`--c, --client-simulation`     This simulates a handshake with a number of standard clients so that you can figure out which client cannot or can connect to your site. For the latter case the protocol, cipher and curve is displayed, also if there's Forward Secrecy. testssl.sh uses a handselected set of clients which are retrieved by the SSLlabs API. The output is aligned in columns when combined with the `--wide` option. If you want the full nine yards of clients displayed use the environment variable ALL_CLIENTS.
+`-c, --client-simulation`     This simulates a handshake with a number of standard clients so that you can figure out which client cannot or can connect to your site. For the latter case the protocol, cipher and curve is displayed, also if there's Forward Secrecy. testssl.sh uses a handselected set of clients which are retrieved by the SSLlabs API. The output is aligned in columns when combined with the `--wide` option. If you want the full nine yards of clients displayed use the environment variable ALL_CLIENTS.
 
 `-g, --grease` checks several server implementation bugs like tolerance to size limitations and GREASE, see https://www.ietf.org/archive/id/draft-ietf-tls-grease-01.txt . This checks doesn't run per default.
 
@@ -489,10 +489,15 @@ Developed by Dirk Wetter, David Cooper and many others, see CREDITS.md .
 ## COPYRIGHT
 
 Copyright © 2012 Dirk Wetter. License GPLv2: Free Software Foundation, Inc.
-       This is free software: you are free to change and redistribute it under the terms of the license. Usage WITHOUT ANY WARRANTY. USE at your OWN RISK!
+       This is free software: you are free to change and redistribute it under the terms of the license, see LICENSE.
 
-If you're offering testssl.sh as a public and / or paid service in the internet you need to mention to your audience that you're using this program and
-where to get this program from.
+Attribution is important for the future of this project - also in the
+internet. Thus if you're offering a scanner based on testssl.sh as a public
+and/or paid service in the internet you are strongly encouraged to mention to
+your audience that you're using this program and where to get this program
+from. That helps us to get bugfixes, other feedback and more contributions.
+
+Usage WITHOUT ANY WARRANTY. USE at your OWN RISK!
 
 
 ## LIMITATION
