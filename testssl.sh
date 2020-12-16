@@ -3025,17 +3025,16 @@ run_cookie_flags() {     # ARG1: Path
           while read -r line;
           do
             cookie_lowercase=$(tolower "$line")
+            read -r _ cookie _ <<< "$line"
+            IFS="=" read -r cookie_name _ <<< "$cookie"
+
             if [[ "$cookie_lowercase" != *" secure"* ]];
             then
-              read -r _ cookie _ <<< "$line"
-              IFS="=" read -r cookie_name _ <<< "$cookie"
               not_secure_cookie_names+=("$cookie_name")
             fi
 
             if [[ "$cookie_lowercase" != *" httponly"* ]];
             then
-              read -r _ cookie _ <<< "$line"
-              IFS="=" read -r cookie_name _ <<< "$cookie"
               not_httponly_cookie_names+=("$cookie_name")
             fi
 
