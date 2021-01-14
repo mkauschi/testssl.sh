@@ -14389,7 +14389,8 @@ run_renego() {
           fileout "$jsonID" "OK" "TLS 1.3 only server" "$cve" "$cwe"
      else
           # first fingerprint for the Line "Secure Renegotiation IS NOT" or "Secure Renegotiation IS "
-          $OPENSSL s_client $(s_client_options "$proto $STARTTLS $BUGS -connect $NODEIP:$PORT $PROXY") 2>&1 </dev/null >$TMPFILE 2>$ERRFILE
+          $OPENSSL s_client $(s_client_options "$proto $STARTTLS $BUGS -servername $NODE -connect $NODEIP:$PORT $PROXY") 2>&1 </dev/null >$TMPFILE 2>$ERRFILE
+
           if sclient_connect_successful $? $TMPFILE; then
                grep -iaq "Secure Renegotiation IS NOT" $TMPFILE
                sec_renego=$?                                                    # 0= Secure Renegotiation IS NOT supported
