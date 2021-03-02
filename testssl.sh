@@ -2048,7 +2048,7 @@ service_detection() {
 
      if ! "$CLIENT_AUTH"; then
           # SNI is not standardized for !HTTPS but fortunately for other protocols s_client doesn't seem to care
-          printf "$GET_REQ11" | $OPENSSL s_client $(s_client_options "$1 -quiet $BUGS -connect $NODEIP:$PORT $PROXY $SNI") >$TMPFILE 2>$ERRFILE &
+          printf "%s" "$GET_REQ11" | $OPENSSL s_client $(s_client_options "$1 -quiet $BUGS -connect $NODEIP:$PORT $PROXY $SNI") >$TMPFILE 2>$ERRFILE &
           wait_kill $! $HEADER_MAXSLEEP
           was_killed=$?
           head $TMPFILE | grep -aq '^HTTP\/' && SERVICE=HTTP
